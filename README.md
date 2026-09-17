@@ -26,18 +26,89 @@
 
 更完整的问题边界见 [PRD](./PRD-personal-backlog.md)。
 
-## 本地运行
+## 下载后怎么用
+
+这不是打开某个 `.html` 就能用的静态页，需要先在本机起一个开发服务器，再用浏览器访问它打印出来的地址。
+
+### 1. 准备环境
+
+安装 [Node.js LTS](https://nodejs.org/)（建议 20 或以上）。安装完成后，新开一个终端，执行下面两句，能看到版本号即可：
+
+```bash
+node -v
+npm -v
+```
+
+### 2. 拿到代码
+
+**方式 A：从 GitHub 下载压缩包**
+
+1. 打开仓库页面，点绿色的 **Code** → **Download ZIP**。
+2. 解压到任意目录。解压后文件夹名通常是 `personal-backlog-cockpit-main`。
+
+**方式 B：用 Git 克隆**
+
+```bash
+git clone https://github.com/cincocc/personal-backlog-cockpit.git
+```
+
+### 3. 进入项目目录
+
+在终端里 `cd` 到解压（或克隆）后的项目根目录。这个目录里应能看到 `package.json`、`src`、`README.md`。
+
+macOS 示例：
+
+```bash
+cd ~/Downloads/personal-backlog-cockpit-main
+```
+
+如果是克隆下来的：
+
+```bash
+cd personal-backlog-cockpit
+```
+
+### 4. 安装依赖并启动
 
 ```bash
 npm install
 npm run dev
 ```
 
-打开终端里的本地地址 → **加载样例** → 对上列名 → 选负责人 `Alex Chen` → 在需求池和本周里试用筛选、详情和清单状态。
+`npm install` 第一次会花一两分钟。成功后不要关这个终端窗口，开发服务器一直开着，页面才能打开。
+
+### 5. 用浏览器打开本地地址
+
+终端里会出现类似这样的几行：
+
+```text
+  VITE v6.x.x  ready in xxx ms
+
+  ➜  Local:   http://localhost:5173/
+```
+
+**本地地址**就是这里的 `Local:` 后面那一串，一般是：
+
+**http://localhost:5173/**
+
+把它复制到 Chrome / Safari / Edge 的地址栏回车。`localhost` 表示这台电脑自己，`5173` 是 Vite 的默认端口。不是 GitHub 网址，也不是文件路径。
+
+- 若 5173 已被占用，终端会改用 `http://localhost:5174/` 等，以终端实际打印的为准。
+- 关掉运行 `npm run dev` 的终端后，这个地址就打不开了；再用时重新执行 `npm run dev`。
+- 改代码后页面会自动刷新，不用反复手动打开。
+
+### 6. 在页面里走一遍
+
+1. 点 **加载样例**（或 **上传表格** 导入你自己的 Excel / CSV）。
+2. 在 **映射** 里核对列名，点 **查看需求池**。
+3. 右上角选产品负责人（样例可选 `Alex Chen`）。
+4. 在 **需求池** / **本周** 里筛选、看详情、改清单状态。
+
+### 其他命令
 
 ```bash
-npm test
-npm run build
+npm test          # 跑规则与装箱的单元测试
+npm run build     # 打生产包到 dist/
 ```
 
 技术栈：Vite · React · TypeScript · MUI · SheetJS。
