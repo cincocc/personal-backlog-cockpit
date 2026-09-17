@@ -1,0 +1,11 @@
+# Company source exports — never publish
+*.xlsx
+*.xls
+.~*
+.DS_Store
+node_modules/
+dist/
+.env
+.env.*
+*.tsbuildinfo
+!public/samples/**
