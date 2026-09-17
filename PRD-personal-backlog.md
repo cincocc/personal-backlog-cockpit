@@ -1,124 +1,82 @@
-# PRD：个人需求舱（Personal Backlog Cockpit）
+# PRD：个人需求舱
 
-## 1. Summary
+## 1. 摘要
 
-This document specifies a personal overlay on a shared DingTalk bitable (多维表) used as a company-wide R&D task pool. The product does not replace the shared table. It lets one product manager import an Excel/CSV snapshot, isolate items they own, classify mixed work, and pack a week of work against personal capacity. The public GitHub demo uses fictional ESL (electronic shelf label) data only.
+个人需求舱是叠在共享任务池导出文件上的个人规划工具，不替代源表。使用者导入 Excel / CSV 快照，筛出自己负责的条目，区分软件需求、缺陷和硬件固件，按本周可用小时装箱，并在本机记录清单进度。内置样例为虚构的电子价签（ESL）数据。
 
-## 2. Contacts
+## 2. 背景
 
-| Name | Role | Comment |
-| --- | --- | --- |
-| Product owner (applicant) | ToB ESL SaaS PM | Sole user of the private snapshot; interview audience uses the sample library |
-| Interviewer | Reviewer | Runs the hosted demo; does not connect to DingTalk |
+共享任务池通常是全员同一套视图：软件需求、缺陷、固件和硬件挤在一张表里，个人筛选不能随意改。表里也没有「类型」这一列，优先级和真实工时常常空着或不可用，标题和背景还会拆成多列。
 
-## 3. Background
+本工具只消费导出文件。源表仍是数据源；本应用不写回。
 
-The company has no dedicated requirement system (no ZenTao-like tool). The R&D task pool lives in a shared DingTalk bitable. Everyone uses the same views. Personal filters cannot be changed freely. Software requirements, defects, firmware, and hardware work sit in one list.
+## 3. 目标
 
-A 2026 export of that table has **1,055 rows and 38 columns**. Useful fields exist, but they are incomplete, duplicated, and company-process oriented:
+让一个人在已有导出上走完一周规划：导入 → 映射 → 我的池子 → 本周清单。
 
-- Identity of “what to do” is split across `任务简述` (94% filled) and `需求描述` (45% filled). Only 75 rows have identical text in both.
-- “Why” is split across `任务背景` (45%) and `需求背景` (37%).
-- Owner exists: `产品负责人(任务负责人)` is filled on 89% of rows. Submitter is a different person on many rows.
-- There is **no column named 需求 / 缺陷 / 硬件**. Defects are only hinted by `任务编号` (37% filled). Hardware/firmware is only hinted later by `投入团队` (23% filled).
-- Company status is rich (`待澄清` / `待受理` / `待排期` / `已排期` / `已完成` / `已驳回`) but **priority is missing on 151 of 258 items still waiting to be scheduled**.
-- Effort for packing a week is almost unusable: `产品预估工作量` is filled on 86% of rows but 893 of 910 values are `1`; true R&D person-days are filled on 2–4% of rows.
+**首版结果**
 
-The shared table is the system of record. This initiative exists because a personal planning layer can be built from an export, without asking the company to change the bitable.
+- 用样例可在数分钟内走通全流程。
+- 列映射保存后，可按产品负责人筛「我的」，不必改源表视图。
+- 每条都有可改的类型（软件需求 / 缺陷 / 硬件固件 / 其他）。
+- 给定可用小时后，给出可编辑的本周建议，并支持复制清单和待回写摘要。
+- 真实业务导出不进入 Git；公开路径只用虚构样例。
 
-## 4. Objective
+## 4. 使用者
 
-Give one PM a complete, usable weekly planning loop on top of a snapshot they already can export.
+个人产品经理：要从一份混杂的共享清单里规划自己的一周，且不能改源表结构。
 
-It matters for the job case: it shows problem framing, scope cuts, and a shipped tool, not a toy prompt.
+约束：单人使用、无登录；文件不出浏览器；无大模型密钥时规则分类仍可用。
 
-**Key results (first release)**
+不是：给整条研发布署的需求管理系统。
 
-- An interviewer can finish import → my-pool → week plan in **under 3 minutes** on the public sample file.
-- After mapping columns once, the owner can filter to “items I own” without editing the shared DingTalk views.
-- Every item in the personal pool has a **type** (software requirement / defect / hardware-firmware / other) that the user can override.
-- Given a capacity in hours, the tool proposes a week pack the user can edit and copy out.
-- Real company Excel is never required for the public site and must not appear in GitHub.
+## 5. 价值
 
-## 5. Market Segment(s)
+- 只看自己的切片。
+- 规划前把缺陷、软件需求、硬件固件分开。
+- 按本周小时装箱，而不是在整表里翻。
+- 类型、优先级、工时、钉住和清单状态是个人层字段，源表没有也不影响使用。
+- 清单进度可汇总成回写摘要，回到源表手工更新状态。
 
-Primary job: a B2B product manager who must plan their own work from a messy shared tracker they cannot redesign.
+## 6. 方案
 
-Constraints:
+### 6.1 流程
 
-- Cannot modify shared views or columns at will.
-- Cannot publish real customer or employee data.
-- Must remain usable when the LLM is offline or has no API key.
-- Single operator. No team login.
+1. **导入** — 上传 `.xlsx` / `.csv`，或加载内置样例。只解析第一张表。
+2. **映射** — 把源列对到内部字段，浏览器记住上次映射。标题、产品负责人为必填。
+3. **需求池** — 默认按所选产品负责人筛选，可选「含我提交的」。类型与源表状态联合过滤。可改正来源、类型、个人优先级、小时。需求编号单独一行便于复制。详情展示该行导入时的全部原始字段。
+4. **本周** — 按可用小时装箱；钉住条目带标记，即使超出容量也保留。清单状态：未开始 / 进行中 / 已完成 / 阻塞，仅存本机。可复制本周清单和待回写摘要。
 
-Not the segment: a PMO replacing Jira/ZenTao for the whole R&D org.
+无账号、无管理后台、不写回源表。
 
-## 6. Value Proposition(s)
+### 6.2 字段与规则
 
-**Jobs**
-
-- See only my slice of a mixed pool.
-- Separate defects from product work and hardware/firmware work before a planning conversation.
-- Fit work into this week’s hours instead of scrolling 1,000 rows.
-
-**Gains**
-
-- A stable personal view even when the shared table layout is frozen.
-- A classification the shared table never stored as a first-class field.
-- A week list that can be pasted into a meeting agenda.
-
-**Pains avoided**
-
-- Fighting other people over DingTalk views.
-- Rebuilding filters every week.
-- Treating “everything is 1 point” as a real estimate.
-
-**Better than alternatives**
-
-- Better than another personal sheet: import mapping + AI assist + capacity packing in one loop.
-- Better than connecting DingTalk OpenAPI for a portfolio: interviewers cannot log into the company tenant; an export snapshot is honest and shippable.
-
-## 7. Solution
-
-### 7.1 UX / flow
-
-1. **Import** — Upload `.xlsx` / `.csv`, or load the built-in sample.
-2. **Map columns** — Match source headers to a small internal model. Remember the last mapping in the browser.
-3. **My pool** — Default filter: `产品负责人` equals the selected person (demo: a fictional owner). Show company status as read-only context. Let the user set type, personal priority, and hours.
-4. **Week pack** — User enters available hours. Tool fills a list using type, priority, and hours. User can pin, drop, or swap items. Copy Markdown / download CSV.
-
-No account screen. No admin. No write-back to DingTalk.
-
-### 7.2 Key features
-
-| Feature | Behavior |
+| 能力 | 行为 |
 | --- | --- |
-| Snapshot import | Parse first sheet. Ignore empty rows. Do not upload files to a server. |
-| Column mapping | Required: title, owner. Recommended: status, source, product line, bug id, background, company class (A/B/C/D), accepted flag, period. |
-| Title fallback | Prefer `任务简述`; if empty use `需求描述`. |
-| Background fallback | Prefer `任务背景`; if empty use `需求背景`. |
-| “Mine” rule | Match owner field to a chosen display name. Optional: also include rows I submitted. |
-| Type assist | Rule fallback: bug id present → defect; team/line contains 固件/硬件/AP/EPD/LCD (user-editable dictionary) → hardware-firmware; else software requirement. LLM may suggest; user always wins. |
-| Personal fields | type, personal priority, estimate hours, week bucket, notes. Stored only locally. |
-| Capacity pack | Greedy fill by personal priority then company class, never exceeding hours unless user pins. |
-| Demo library | Fictional ESL backlog with mixed types and multiple owners. |
+| 导入 | 忽略空行。文件不上传到服务器。 |
+| 标题回退 | 优先 `任务简述`，空则 `需求描述`。 |
+| 背景回退 | 优先 `任务背景`，空则 `需求背景`。 |
+| 「我的」 | 产品负责人等于所选姓名；可选同时匹配提交人。 |
+| 类型猜测 | 有任务编号 → 缺陷；产品线含固件 / 硬件 / AP / EPD / LCD → 硬件固件；否则软件需求。用户可改。 |
+| 个人字段 | 类型、来源分级、个人优先级、小时、钉住、清单状态。只存在本机。 |
+| 装箱 | 按个人优先级再按 A/B/C/D 贪心装填，不超容量，除非钉住。 |
+| 样例 | 虚构 ESL 清单，含多种类型和多名负责人。 |
 
-### 7.3 Technology
+推荐映射：源表状态、来源、产品线、任务编号、背景、分类（A/B/C/D）、规划期。
 
-Static web app (Vite + React + TypeScript). Persistence: browser `IndexedDB` (snapshot + mapping + personal overrides). Optional LLM call from the browser with a user-supplied key, or skip AI. Host on GitHub Pages or Vercel. **No application database.** The shared DingTalk table remains the system of record; this app is a disposable planning overlay.
+### 6.3 技术
 
-### 7.4 Assumptions
+静态网页：Vite + React + TypeScript + MUI + SheetJS。快照与偏好存在浏览器 `localStorage`。无应用数据库、无钉钉 OpenAPI。
 
-- The owner can export the bitable to Excel without IT changing the table.
-- Header names stay stable enough that a saved mapping still works week to week.
-- “Mine” is primarily `产品负责人(任务负责人)`, not 提交人.
-- Company class A/B/C/D is value/priority class, not requirement-vs-bug type.
-- Public traffic will use the sample file; the author uses local export privately.
+### 6.4 假设
 
-## 8. Release
+- 使用者能从多维表导出 Excel / CSV。
+- 表头相对稳定，保存的映射下周仍能用。
+- 「我的」以产品负责人为准，提交人是可选项。
+- A/B/C/D 是价值分级，不是需求 vs 缺陷。
 
-**First version (about 10–14 days):** import, mapping, my pool, type assist with rules, week pack, sample data, README + this PRD.
+## 7. 范围
 
-**Not in v1:** DingTalk OpenAPI, write-back, multi-user auth, comments, attachments, sprint burndown, email, meeting minutes.
+**已包含：** 导入、映射、我的需求池、规则分类、详情、本周装箱、钉住、清单状态与回写摘要、虚构样例。
 
-**Later (optional, still no product database):** a tiny serverless proxy only to hide an LLM API key for the public demo; private DingTalk sync as a personal script, not as the GitHub main path.
+**不做：** 钉钉 OpenAPI、写回源表、多人账号、评论、附件、燃尽图。
