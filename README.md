@@ -24,7 +24,24 @@
 
 快照和偏好都在浏览器 `localStorage`：表格内容一份，映射 / 负责人 / 钉住 / 清单状态一份。清空按钮会删掉本机数据
 
-更完整的问题边界见 [PRD](./PRD-personal-backlog.md)。
+更完整的问题边界见 [PRD](./docs/PRD-personal-backlog.md)。
+
+## 目录结构
+
+```text
+personal-backlog-cockpit/
+  README.md                 # 说明
+  package.json              # 依赖与脚本
+  vite.config.ts            # Vite / GitHub Pages 路径
+  tsconfig.json             # TypeScript
+  index.html                # Vite 入口（必须放在项目根）
+  src/                      # 源码
+  public/                   # 静态资源（如样例 CSV）
+  docs/                     # PRD 等文档
+```
+
+GitHub 在线演示（开启 Pages 并完成首次部署后）：
+https://cincocc.github.io/personal-backlog-cockpit/
 
 ## 下载后怎么用
 
@@ -54,7 +71,7 @@ git clone https://github.com/cincocc/personal-backlog-cockpit.git
 
 ### 3. 进入项目目录
 
-在终端里 `cd` 到解压（或克隆）后的项目根目录。这个目录里应能看到 `package.json`、`src`、`README.md`。
+在终端里 `cd` 到解压（或克隆）后的项目根目录。这个目录里应能看到 `package.json`、`src/`、`public/`、`docs/`、`README.md`。
 
 macOS 示例：
 
@@ -109,6 +126,18 @@ npm run dev
 ```bash
 npm test          # 跑规则与装箱的单元测试
 npm run build     # 打生产包到 dist/
+npm run preview   # 本地预览生产包
 ```
+
+### 开启 GitHub Pages
+
+仓库已带 `.github/workflows/pages.yml`。把当前改动推到 `main` 后：
+
+1. 打开仓库 **Settings → Pages**
+2. **Source** 选 **GitHub Actions**（不要选 Deploy from a branch）
+3. 打开 **Actions** 等名为 `Deploy GitHub Pages` 的工作流跑完（绿色勾）
+4. 访问 https://cincocc.github.io/personal-backlog-cockpit/
+
+第一次可能要在 Actions 里点 **Enable workflows** 或允许 `github-pages` 环境。
 
 技术栈：Vite · React · TypeScript · MUI · SheetJS。
