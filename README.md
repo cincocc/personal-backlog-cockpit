@@ -1,3 +1,5 @@
+GitHub 在线演示：https://cincocc.github.io/personal-backlog-cockpit/
+
 # 产品经理个人需求舱
 
 针对公共需求池需求归属混杂、很难管理自身专属需求的情况，可以通过把共享需求池整理成你这周要处理的需求清单。
@@ -39,9 +41,6 @@ personal-backlog-cockpit/
   public/                   # 静态资源（如样例 CSV）
   docs/                     # PRD 等文档
 ```
-
-GitHub 在线演示（开启 Pages 并完成首次部署后）：
-https://cincocc.github.io/personal-backlog-cockpit/
 
 ## 下载后怎么用
 
@@ -128,16 +127,5 @@ npm test          # 跑规则与装箱的单元测试
 npm run build     # 打生产包到 dist/
 npm run preview   # 本地预览生产包
 ```
-
-### 开启 GitHub Pages
-
-仓库已带 `.github/workflows/pages.yml`。把当前改动推到 `main` 后：
-
-1. 打开仓库 **Settings → Pages**
-2. **Source** 选 **GitHub Actions**（不要选 Deploy from a branch）
-3. 打开 **Actions** 等名为 `Deploy GitHub Pages` 的工作流跑完（绿色勾）
-4. 访问 https://cincocc.github.io/personal-backlog-cockpit/
-
-第一次可能要在 Actions 里点 **Enable workflows** 或允许 `github-pages` 环境。
 
 技术栈：Vite · React · TypeScript · MUI · SheetJS。
